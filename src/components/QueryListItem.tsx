@@ -1,10 +1,11 @@
 import { Disclosure, Transition } from '@headlessui/react';
+import { Image, ImageGroup } from 'react-fullscreen-image';
 import { Link } from 'react-router-dom';
 
 export default function QueryListItem({ title, id, imgUrl, domainId }: any) {
   return (
     <Disclosure>
-      <Disclosure.Button className=" w-full pl-4 text-left">
+      <Disclosure.Button className=" w-full pl-4 pr-4 text-left">
         <Link to={`/ke/${domainId}/dashboard/${id}`}>{title}</Link>
       </Disclosure.Button>
       <Transition
@@ -18,7 +19,11 @@ export default function QueryListItem({ title, id, imgUrl, domainId }: any) {
         <Disclosure.Panel>
           {imgUrl && (
             <div>
-              <img src={imgUrl} alt={title} />
+              <ImageGroup>
+                <Image src={imgUrl} alt={title} />
+              </ImageGroup>
+
+              {/* <img src={imgUrl} alt={title} /> */}
             </div>
           )}
         </Disclosure.Panel>

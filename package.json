@@ -17,6 +17,7 @@
     "@uiw/react-codemirror": "^4.19.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-fullscreen-image": "^0.0.3",
     "react-router-dom": "^6.6.1"
   },
   "devDependencies": {

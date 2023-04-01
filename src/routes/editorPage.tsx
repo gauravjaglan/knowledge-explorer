@@ -52,6 +52,16 @@ export default function EditorPage() {
 
   const handleDownloadResult = async () => {
     console.log(queryResponse);
+    let demoVar = 'This is response';
+    const element = document.createElement('a');
+    const file = new Blob([demoVar], {
+      type: 'text/plain',
+    });
+
+    element.href = URL.createObjectURL(file);
+    element.download = 'myFile.txt';
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   };
 
   return (
