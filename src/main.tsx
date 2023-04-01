@@ -13,8 +13,8 @@ import EditorPage from './routes/editorPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/ke" element={<App />}>
-      <Route path="/ke/dashboard" element={<Dashboard />}>
+    <Route path="/ke/:domainId" element={<App />}>
+      <Route path="/ke/:domainId/dashboard" element={<Dashboard />}>
         <Route path=":id" element={<EditorPage />} />
       </Route>
     </Route>

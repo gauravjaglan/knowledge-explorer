@@ -5,18 +5,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TabList from '../components/TabList';
 
-import { queries } from '../data';
+import queries from '../queries/data';
 
 export default function EditorPage() {
-  let { id }: any = useParams();
+  let { id, domainId }: any = useParams();
   const [currentQuery, setCurrentQuery] = useState<any>(null);
-  const [currentFormat, setCurrentFormat] = useState<string>("json");
+  const [currentFormat, setCurrentFormat] = useState<string>('json');
   const [editorQueryValue, setEditorQueryValue] = useState<any>('');
   const [queryResponse, setQueryResponse] = useState<any>();
   const [error, setError] = useState<any>('');
 
   useEffect(() => {
-    const queriesList = queries;
+    const queriesList = queries[domainId];
     const currentQuery = queriesList.filter(
       (query: any) => parseInt(query.id) === parseInt(id)
     )[0];
@@ -31,13 +31,10 @@ export default function EditorPage() {
 
   const handleQueryChange = async () => {
     try {
-
-
-      let result:any = await fetch(
-          `https://sedmoon-sparql.crigen.myengie.com/PILOT4A/query?query=${encodeURIComponent(
-            editorQueryValue || currentQuery?.query
-          )}&format=${encodeURIComponent(currentFormat)}`
-        
+      let result: any = await fetch(
+        `https://sedmoon-sparql.crigen.myengie.com/${domainId}/query?query=${encodeURIComponent(
+          editorQueryValue || currentQuery?.query
+        )}&format=${encodeURIComponent(currentFormat)}`
       );
       switch (currentFormat) {
         case 'json':
@@ -47,19 +44,15 @@ export default function EditorPage() {
           result = await result.text();
           break;
       }
-      console.log(result)
       setQueryResponse(result);
     } catch (error: any) {
       setError(error?.message || error);
     }
-
   };
 
   const handleDownloadResult = async () => {
-
-console.log(queryResponse)
-
-    }
+    console.log(queryResponse);
+  };
 
   return (
     <div>
@@ -86,42 +79,59 @@ console.log(queryResponse)
           />
         </div>
         <div>
+          <div
+            style={{
+              backgroundColor: '#f7f7f7',
+            }}
+            data-step="5"
+            data-intro="or download directly your results in the format of your choice"
+          >
+            <label className="n">Results Format</label>
+            <select
+              value={currentFormat}
+              name="format"
+              id="format"
+              onChange={(e: any) => {
+                setCurrentFormat(e.target.value);
+              }}
+            >
+              <option value="auto">Auto</option>
+              <option value="application/sparql-results+xml">
+                XML (select)
+              </option>
+              <option value="json">JSON (select)</option>
+              <option value="application/sparql-results+json">
+                JSON-LD (construct)
+              </option>
+              <option value="application/turtle">Turtle (construct)</option>
+              <option value="rdf+xml" selected={true}>
+                {' '}
+                RDF/XML (construct)
+              </option>
+              <option value="application/n-triples">
+                N-Triple (construct)
+              </option>
+              <option value="application/x-trig">Trig (construct)</option>
+              <option value="text/csv">CSV (select)</option>
+              <option value="text/tab-separated-values">TSV (select)</option>
+            </select>
 
-          <div style = {
-            {
-            backgroundColor: "#f7f7f7"          
-          }
-          } 
-            
-            data-step="5" data-intro="or download directly your results in the format of your choice">
-              <label className="n">Results Format</label>
-              <select value={currentFormat}   name="format" id="format" onChange={(e:any) => {
-                setCurrentFormat(e.target.value)
-              }}>
-                  <option value="auto">Auto</option>
-                  <option value="application/sparql-results+xml">XML (select)</option>
-                  <option value="json">JSON (select)</option>
-                  <option value="application/sparql-results+json">JSON-LD (construct)</option>
-                  <option value="application/turtle">Turtle (construct)</option>
-                  <option value="rdf+xml" selected={true}> RDF/XML (construct)</option>
-                  <option value="application/n-triples">N-Triple (construct)</option>
-                  <option value="application/x-trig">Trig (construct)</option>
-                  <option value="text/csv">CSV (select)</option>
-                  <option value="text/tab-separated-values">TSV (select)</option>
-              </select>                                    
-             
-          <button style ={{marginLeft: "20px" }} 
+            <button
+              style={{ marginLeft: '20px' }}
               onClick={handleQueryChange}
-              className="rounded bg-purple-300 px-4 py-2 shadow-sm hover:shadow-lg">
-            Execute Query
-          </button>
-          <button style = {{marginLeft: "20px" }} 
-              onClick={handleDownloadResult} 
-              className="rounded bg-pink-300 px-4 py-2 shadow-sm hover:shadow-lg"> &nbsp;	
-            Download Results
-          </button>
+              className="rounded bg-purple-300 px-4 py-2 shadow-sm hover:shadow-lg"
+            >
+              Execute Query
+            </button>
+            <button
+              style={{ marginLeft: '20px' }}
+              onClick={handleDownloadResult}
+              className="rounded bg-pink-300 px-4 py-2 shadow-sm hover:shadow-lg"
+            >
+              {' '}
+              &nbsp; Download Results
+            </button>
           </div>
-          
         </div>
         <TabList queryResponse={queryResponse} error={error} />
       </div>

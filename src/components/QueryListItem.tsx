@@ -1,15 +1,11 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 
-export default function QueryListItem({
-  title,
-  id,
-  imgUrl,
-}: any) {
+export default function QueryListItem({ title, id, imgUrl, domainId }: any) {
   return (
     <Disclosure>
       <Disclosure.Button className=" w-full pl-4 text-left">
-        <Link to={`/ke/dashboard/${id}`}>{title}</Link>
+        <Link to={`/ke/${domainId}/dashboard/${id}`}>{title}</Link>
       </Disclosure.Button>
       <Transition
         enter="transition duration-100 ease-out"
